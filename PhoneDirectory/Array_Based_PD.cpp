@@ -8,6 +8,7 @@
 #include <fstream>
 #include <istream>
 #include <ostream>
+#include <iostream>
 
 using namespace std;
 
@@ -107,6 +108,26 @@ void Phone_Directory::save()
 	}
 }
 
+/** Removes the entry at the given index.
+@param index The index of the entry to be removed
+*/
+void Phone_Directory::remove_entry(int index) {
+	if (index >= size) {
+		std::cerr << "remove_entry(int) Could not remove entry from directory. Index exceeded bounds of directory.";
+		return;
+	}
+	//Shift each entry after the removed entry up one place
+	for (int ndx = index; ndx < this->size - 1; ndx++) {
+			the_directory[ndx] = the_directory[ndx + 1];
+		}
+	//Blank the last entry
+	the_directory[size-1] = Directory_Entry();
+	//Decrement the size of the directory
+	size--;
+	//And flag the directory as modified
+	modified = true;
+}
+
 /** Remove an entry
 	post: The name is no longer in the directory
 	@param name The name to be removed
@@ -115,12 +136,13 @@ void Phone_Directory::save()
 	*/
 string Phone_Directory::remove_entry(const string& name) // Exercise 1.7: please complete the remove_entry() method - Ed/Kent
 {
-
-	// Hint: you can use the code below to shift names down in the directory to remove the selected entry specified by "index"
-	// for (int i = index; i < size - 1; i++)
-		// the_directory[i] = the_directory[i + 1];
-
-	return "";
+	string removedName = "";
+	int indexOfRemoval = find(name);
+	if (indexOfRemoval > -1) {
+		removedName = name;
+		remove_entry(indexOfRemoval);
+	}
+	return removedName;
 }
 
 // Private method implementation
